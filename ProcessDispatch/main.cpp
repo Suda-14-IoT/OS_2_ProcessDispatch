@@ -46,6 +46,11 @@ bool roundRobinComparePoint(const Process *p1, const Process *p2) {
     return p1->arrive < p2->arrive;
 }
 
+bool priorityComparePoint(const Process *p1, const Process *p2) {
+    return p1->priority > p2->priority;
+}
+
+
 class ProcessesManager {
 private:
     
@@ -113,7 +118,7 @@ public:
         while (processes.size() != 0) {
             vector<Process *> toRunProcess = rightNowProcesses();
             int timeToRun = timeSlice[timeSliceIter];
-            this_thread::sleep_for(std::chrono::milliseconds(timeToRun*1000));
+//            this_thread::sleep_for(std::chrono::milliseconds(timeToRun*1000));
             timeSliceIter = (timeSliceIter + 1)%timeSlice.size();
             if (toRunProcess.size() == 0) {
                 timeNow += 1;
@@ -121,6 +126,22 @@ public:
             }
             sort(toRunProcess.begin(), toRunProcess.end(), roundRobinComparePoint);
             run(toRunProcess[0], timeToRun);
+        }
+        for (std::vector<Process>::size_type iter = 0; iter!=finishedProcesses.size(); iter++) {
+            Process process = finishedProcesses[iter];
+            cout << process.name + " waiting time " + to_string(process.waitingTime) + "| turnover time " + to_string(process.turnoverTime) << endl;
+        }
+    }
+    
+    void highPriorityFirst() {
+        while (processes.size() != 0) {
+            vector<Process *> toRunProcess = rightNowProcesses();
+            if (toRunProcess.size() == 0) {
+                timeNow += 1;
+                continue;
+            }
+            sort(toRunProcess.begin(), toRunProcess.end(), priorityComparePoint);
+            run(toRunProcess[0], toRunProcess[0]->duration);
         }
         for (std::vector<Process>::size_type iter = 0; iter!=finishedProcesses.size(); iter++) {
             Process process = finishedProcesses[iter];
@@ -138,6 +159,6 @@ int main(int argc, const char * argv[]) {
 //    cout << manager.processes[4].name << endl;
 //    manager.rightNowProcesses();
     
-    manager.roundRobin();
+    manager.highPriorityFirst();
     return 0;
 }
