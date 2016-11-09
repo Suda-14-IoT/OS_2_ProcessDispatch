@@ -27,6 +27,15 @@ public:
     int priority;
     int waitingTime;
     int turnoverTime;
+    
+    Process(vector<string> processInfo) {
+        name = processInfo[0];
+        arrive = stoi(processInfo[1]);
+        duration = stoi(processInfo[2]);
+        priority = stoi(processInfo[3]);
+        waitingTime = 0;
+        turnoverTime = 0;
+    }
 };
 
 bool operator==(Process const &p1 ,Process const & p2) {
@@ -170,20 +179,32 @@ void splitString(const std::string& s, std::vector<std::string>& v, const std::s
 }
 
 
-
+vector<Process> readFile() {
+    ifstream file;
+    string line;
+    vector<Process> processes = {};
+    file.open("/Users/Nero/Desktop/process.txt");
+    if (file.is_open()) {
+        while (getline(file, line)) {
+            vector<string> processInfo;
+            splitString(line, processInfo, ",");
+            Process process = Process(processInfo);
+            processes.push_back(process);
+        }
+    }
+    file.close();
+    return processes;
+}
 
 int main(int argc, const char * argv[]) {
     
-    vector<Process> processes = {{"p1", 0, 7, 5, 0, 0}, {"p2", 1, 1, 1, 0, 0}, {"p3", 1, 3, 4, 0 ,0}, {"p4", 2, 5, 3, 0, 0}, {"p5", 4, 4, 2, 0, 0}};
-    ProcessesManager manager = *new ProcessesManager(processes);
-//    manager.run(&manager.processes[0], 10);
-//    cout << manager.processes[4].name << endl;
-//    manager.rightNowProcesses();
+//    vector<Process> processes = {{"p1", 0, 7, 5, 0, 0}, {"p2", 1, 1, 1, 0, 0}, {"p3", 1, 3, 4, 0 ,0}, {"p4", 2, 5, 3, 0, 0}, {"p5", 4, 4, 2, 0, 0}};
     
     vector<std::string> str;
     splitString("h\ne\nl\nl\no", str, "\n");
     
-
+    vector<Process> processes = readFile();
+    ProcessesManager manager = *new ProcessesManager(processes);
     manager.highPriorityFirst();
     return 0;
 }
