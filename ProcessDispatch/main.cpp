@@ -79,6 +79,8 @@ public:
         if (process->duration - duration < 0) {
             duration = process->duration;
         }
+        
+        
         process->duration = process->duration - duration;
         process->waitingTime += (timeNow-process->arrive);
         process->turnoverTime += (timeNow-process->arrive + duration);
@@ -91,6 +93,7 @@ public:
             processes.pop_back();
         }
 //        cout << "run "  + " form " + to_string(timeNow-duration) + " to " + to_string(timeNow) + " for " + to_string(duration) << endl;
+        
         cout << "-" + to_string(timeNow-duration) + " ";
         for (int i = 0; i<duration; i++) {
             cout <<  "-";
@@ -134,7 +137,6 @@ public:
         while (processes.size() != 0) {
             vector<Process *> toRunProcess = rightNowProcesses();
             int timeToRun = timeSlice[timeSliceIter];
-//            this_thread::sleep_for(std::chrono::milliseconds(timeToRun*1000));
             timeSliceIter = (timeSliceIter + 1)%timeSlice.size();
             if (toRunProcess.size() == 0) {
                 timeNow += 1;
@@ -205,6 +207,9 @@ vector<Process> readFile(string filepath) {
             Process process = Process(processInfo);
             processes.push_back(process);
         }
+    }else {
+        cout << "Open file failed" << endl;
+        exit(EXIT_FAILURE);
     }
     file.close();
     return processes;
