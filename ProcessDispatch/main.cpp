@@ -10,6 +10,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
+#include <fstream>
 #define PROCESS_NAME_LEN 32
 
 
@@ -151,6 +152,26 @@ public:
     
 };
 
+
+void splitString(const std::string& s, std::vector<std::string>& v, const std::string& c)
+{
+    std::string::size_type pos1, pos2;
+    pos2 = s.find(c);
+    pos1 = 0;
+    while(std::string::npos != pos2)
+    {
+        v.push_back(s.substr(pos1, pos2-pos1));
+        
+        pos1 = pos2 + c.size();
+        pos2 = s.find(c, pos1);
+    }
+    if(pos1 != s.length())
+        v.push_back(s.substr(pos1));
+}
+
+
+
+
 int main(int argc, const char * argv[]) {
     
     vector<Process> processes = {{"p1", 0, 7, 5, 0, 0}, {"p2", 1, 1, 1, 0, 0}, {"p3", 1, 3, 4, 0 ,0}, {"p4", 2, 5, 3, 0, 0}, {"p5", 4, 4, 2, 0, 0}};
@@ -159,6 +180,10 @@ int main(int argc, const char * argv[]) {
 //    cout << manager.processes[4].name << endl;
 //    manager.rightNowProcesses();
     
+    vector<std::string> str;
+    splitString("h\ne\nl\nl\no", str, "\n");
+    
+
     manager.highPriorityFirst();
     return 0;
 }
