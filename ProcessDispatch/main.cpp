@@ -222,6 +222,7 @@ int main(int argc, const char * argv[]) {
     cin >> filePahth;
     
     vector<Process> processes = readFile(filePahth);
+    
     ProcessesManager manager0 = *new ProcessesManager(processes);
     manager0.sjf();
     

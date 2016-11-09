@@ -14,6 +14,10 @@ P4,2,5,3
 P5,4,4,2
 ```
 
+## Requirement
+
+C++ 11 
+
 ## Usage
 
 ```bash
