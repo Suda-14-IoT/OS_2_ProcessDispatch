@@ -90,7 +90,16 @@ public:
             remove(processes.begin(), processes.end(), *process);
             processes.pop_back();
         }
-        cout << "run " + p.name + " form " + to_string(timeNow-duration) + " to " + to_string(timeNow) + " for " + to_string(duration) << endl;
+//        cout << "run "  + " form " + to_string(timeNow-duration) + " to " + to_string(timeNow) + " for " + to_string(duration) << endl;
+        cout << "-" + to_string(timeNow-duration) + " ";
+        for (int i = 0; i<duration; i++) {
+            cout <<  "-";
+        }
+        cout << p.name << ":" + to_string(duration);
+        for (int i = 0; i<duration; i++) {
+            cout <<  "-";
+        }
+        cout << " " + to_string(timeNow) + "-|";
     }
     
     vector<Process *> rightNowProcesses() {
@@ -152,6 +161,7 @@ public:
     }
     
     void printResult() {
+        cout << endl;
         int totoalTurnoverTime = 0;
         for (std::vector<Process>::size_type iter = 0; iter!=finishedProcesses.size(); iter++) {
             Process process = finishedProcesses[iter];
