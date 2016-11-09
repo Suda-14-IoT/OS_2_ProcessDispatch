@@ -116,10 +116,7 @@ public:
             sort(toRunProcess.begin(), toRunProcess.end(), sjfCpmparePoint);
             run(toRunProcess[0], toRunProcess[0]->duration);
         }
-        for (std::vector<Process>::size_type iter = 0; iter!=finishedProcesses.size(); iter++) {
-            Process process = finishedProcesses[iter];
-            cout << process.name + " waiting time " + to_string(process.waitingTime) + "| turnover time " + to_string(process.turnoverTime) << endl;
-        }
+        printResult();
     }
     
     void roundRobin() {
@@ -137,10 +134,7 @@ public:
             sort(toRunProcess.begin(), toRunProcess.end(), roundRobinComparePoint);
             run(toRunProcess[0], timeToRun);
         }
-        for (std::vector<Process>::size_type iter = 0; iter!=finishedProcesses.size(); iter++) {
-            Process process = finishedProcesses[iter];
-            cout << process.name + " waiting time " + to_string(process.waitingTime) + "| turnover time " + to_string(process.turnoverTime) << endl;
-        }
+        printResult();
     }
     
     void highPriorityFirst() {
@@ -153,11 +147,21 @@ public:
             sort(toRunProcess.begin(), toRunProcess.end(), priorityComparePoint);
             run(toRunProcess[0], toRunProcess[0]->duration);
         }
+        
+        printResult();
+    }
+    
+    void printResult() {
+        int totoalTurnoverTime = 0;
         for (std::vector<Process>::size_type iter = 0; iter!=finishedProcesses.size(); iter++) {
             Process process = finishedProcesses[iter];
             cout << process.name + " waiting time " + to_string(process.waitingTime) + "| turnover time " + to_string(process.turnoverTime) << endl;
+            totoalTurnoverTime += process.turnoverTime;
         }
+        cout << "average turnover time: " + to_string(totoalTurnoverTime/finishedProcesses.size()) << endl;
+        cout << "----------------------------------" << endl;
     }
+    
     
 };
 
@@ -179,11 +183,11 @@ void splitString(const std::string& s, std::vector<std::string>& v, const std::s
 }
 
 
-vector<Process> readFile() {
+vector<Process> readFile(string filepath) {
     ifstream file;
     string line;
     vector<Process> processes = {};
-    file.open("/Users/Nero/Desktop/process.txt");
+    file.open(filepath);
     if (file.is_open()) {
         while (getline(file, line)) {
             vector<string> processInfo;
@@ -198,13 +202,15 @@ vector<Process> readFile() {
 
 int main(int argc, const char * argv[]) {
     
-//    vector<Process> processes = {{"p1", 0, 7, 5, 0, 0}, {"p2", 1, 1, 1, 0, 0}, {"p3", 1, 3, 4, 0 ,0}, {"p4", 2, 5, 3, 0, 0}, {"p5", 4, 4, 2, 0, 0}};
     
-    vector<std::string> str;
-    splitString("h\ne\nl\nl\no", str, "\n");
+    vector<Process> processes = readFile("/Users/Nero/Desktop/process.txt");
+    ProcessesManager manager0 = *new ProcessesManager(processes);
+    manager0.sjf();
     
-    vector<Process> processes = readFile();
-    ProcessesManager manager = *new ProcessesManager(processes);
-    manager.highPriorityFirst();
+    ProcessesManager manager1 = *new ProcessesManager(processes);
+    manager1.roundRobin();
+    
+    ProcessesManager manager2 = *new ProcessesManager(processes);
+    manager2.highPriorityFirst();
     return 0;
 }
