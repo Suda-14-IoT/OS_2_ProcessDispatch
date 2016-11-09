@@ -212,8 +212,11 @@ vector<Process> readFile(string filepath) {
 
 int main(int argc, const char * argv[]) {
     
+    string filePahth;
+    cout << "Please input file path:" << endl;
+    cin >> filePahth;
     
-    vector<Process> processes = readFile("/Users/Nero/Desktop/process.txt");
+    vector<Process> processes = readFile(filePahth);
     ProcessesManager manager0 = *new ProcessesManager(processes);
     manager0.sjf();
     
